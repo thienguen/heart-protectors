@@ -2,11 +2,11 @@
 
 A machine learning project for predicting heart failure risks based on patient health indicators.
 
-## Project Overview
+## 📋 Project Overview
 
 This project implements various machine learning models to predict heart failure risks using medical records and health indicators. We analyze patient data using different algorithms and evaluate their performance.
 
-## Dataset Information
+## 📊 Dataset Information
 
 We use the following heart disease datasets from Kaggle:
 
@@ -15,7 +15,7 @@ We use the following heart disease datasets from Kaggle:
 3. [Heart Disease Dataset](https://www.kaggle.com/datasets/johnsmith88/heart-disease-dataset) - Larger dataset with additional clinical features
 4. [Heart Disease UCI](https://www.kaggle.com/datasets/oktayrdeki/heart-disease) - Classic UCI heart disease dataset
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 heart-protectors/
@@ -42,22 +42,22 @@ heart-protectors/
 └── requirements.txt                # Project dependencies
 ```
 
-## Models Implemented
+## 🤖 Models Implemented
 
-- **Random Forest**: Ensemble learning method for classification
-- **K-Nearest Neighbors (KNN)**: Instance-based learning for classification
-- **Support Vector Machine (SVM)**: Effective for high-dimensional spaces
-- **Principal Component Analysis (PCA)**: Dimensionality reduction technique
+- **🌳 Random Forest**: Ensemble learning method for classification
+- **🏘️ K-Nearest Neighbors (KNN)**: Instance-based learning for classification
+- **🔍 Support Vector Machine (SVM)**: Effective for high-dimensional spaces
+- **📉 Principal Component Analysis (PCA)**: Dimensionality reduction technique
 
-## Implementation Checklist
+## ✅ Implementation Checklist
 
-### Setup
+### 🚀 Setup
 
 - [x] Initialize Git repository
 - [x] Create project structure
 - [x] Create requirements.txt
 
-### Data Preparation
+### 🧹 Data Preparation
 
 - [ ] Load dataset
 - [ ] Handle missing values
@@ -65,14 +65,14 @@ heart-protectors/
 - [ ] Normalize numerical features
 - [ ] Split data into training/validation/test sets
 
-### Model Implementation
+### 💡 Model Implementation
 
 - [ ] Implement Random Forest model
 - [ ] Implement KNN model
 - [ ] Implement SVM model
 - [ ] Apply PCA for dimensionality reduction
 
-### Model Evaluation
+### 📈 Model Evaluation
 
 - [ ] Train and evaluate Random Forest
 - [ ] Train and evaluate KNN
@@ -80,13 +80,13 @@ heart-protectors/
 - [ ] Compare model performances
 - [ ] Visualize results
 
-### Advanced Topics (If Time Permits)
+### 🔬 Advanced Topics (If Time Permits)
 
 - [ ] Implement neural network models
 - [ ] Create web interface for model demonstration
 - [ ] Perform hyperparameter optimization
 
-## Setup Instructions
+## 🛠️ Setup Instructions
 
 1. Clone the repository:
 
@@ -140,7 +140,7 @@ python src/preprocessing/preprocess.py
 python src/trainer.py
 ```
 
-## Setting up Kaggle API Credentials
+## 🔑 Setting up Kaggle API Credentials
 
 To use the download script with Kaggle API:
 
@@ -152,7 +152,8 @@ To use the download script with Kaggle API:
    - On Linux/Mac: ~/.kaggle/kaggle.json
 5. Ensure permissions are set correctly (chmod 600 ~/.kaggle/kaggle.json on Linux/Mac)
 
-## Future Enhancements
+## 🔮 Future Enhancements
 
-- Web interface for interactive predictions
-- Implementation of deep learning models
+- 🌐 Web interface for interactive predictions
+- 🧠 Implementation of deep learning models
+- 📱 Mobile application for quick heart health assessments
