@@ -60,7 +60,7 @@ def main():
     input_dim = len(X_train[0])
     hidden_layer_nodes = 512
     output_layer_nodes = 2
-    hidden_layer_activation = "relu"
+    hidden_layer_activation = "sigmoid"
     output_layer_activation = "softmax"
     y_train_matrix = to_categorical(y_train, 2)
     y_test_matrix = to_categorical(y_test, 2)
@@ -72,6 +72,7 @@ def main():
                 activation=hidden_layer_activation,
                 input_dim=input_dim,
             ),
+            Dense(hidden_layer_nodes, activation=hidden_layer_activation),
             Dense(hidden_layer_nodes, activation=hidden_layer_activation),
             Dense(output_layer_nodes, activation=output_layer_activation),
         ]
@@ -85,13 +86,24 @@ def main():
         X_train.astype("float32"),
         y_train_matrix,
         validation_split=0.2,
-        epochs=200,
+        epochs=100,
         batch_size=64,
     )
     test_pred = np.argmax(model.predict(X_test.astype("float32")), axis=1)
     test_true = np.argmax(y_test_matrix, axis=1)
+    train_pred = np.argmax(model.predict(X_train.astype("float32")), axis=1)
+    train_true = np.argmax(y_train_matrix, axis=1)
 
-    print(str(round((test_pred == test_true).sum() / len(test_pred) * 100, 2)))
+    print(
+        "Model accuracy with test data: "
+        + str(round((test_pred == test_true).sum() / len(test_pred) * 100, 2))
+        + "%"
+    )
+    print(
+        "Model accuracy with training data: "
+        + str(round((train_pred == train_true).sum() / len(train_pred) * 100, 2))
+        + "%"
+    )
 
     return
 
