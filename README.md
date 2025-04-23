@@ -13,7 +13,7 @@ We use the following heart disease datasets from Kaggle:
 1. [Heart Failure Clinical Data](https://www.kaggle.com/datasets/andrewmvd/heart-failure-clinical-data) - 299 patients with 13 features for predicting mortality
 2. [Heart Failure Prediction Dataset](https://www.kaggle.com/datasets/fedesoriano/heart-failure-prediction) - 918 patients with 11 features for heart disease prediction
 3. [Heart Disease Dataset](https://www.kaggle.com/datasets/johnsmith88/heart-disease-dataset) - Larger dataset with additional clinical features
-4. [Heart Disease UCI](https://www.kaggle.com/datasets/oktayrdeki/heart-disease) - Classic UCI heart disease dataset
+4. [Heart Disease UCI](https://www.kaggle.com/datasets/oktayrdeki/heart-disease) - Classic UCI heart disease dataset (10,000 entries)
 
 ## 📁 Project Structure
 
