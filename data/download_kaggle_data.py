@@ -1,8 +1,8 @@
 import os
-import sys
+# import sys
 import webbrowser
-import zipfile
-import shutil
+# import zipfile
+# import shutil
 from pathlib import Path
 
 # Create data directory if it doesn't exist
@@ -175,5 +175,4 @@ def main():
         manual_download_instructions(dataset_name)
 
 
-if __name__ == "__main__":
-    main()
+main()
