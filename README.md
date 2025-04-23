@@ -157,3 +157,43 @@ To use the download script with Kaggle API:
 - 🌐 Web interface for interactive predictions
 - 🧠 Implementation of deep learning models
 - 📱 Mobile application for quick heart health assessments
+
+### 1.
+
+```bash
+# Install in development mode
+pip install -e .
+
+# Or for production
+pip install .
+```
+
+### 2.
+
+```bash
+# Install pip-tools if not already installed
+pip install pip-tools
+
+# Generate requirements file
+pip-compile pyproject.toml
+
+# Install requirements
+pip install -r requirements.txt
+```
+
+## Dependencies
+
+- **Core Data Science**: numpy, pandas, scikit-learn, scipy, matplotlib, seaborn
+- **NLP & Text Processing**: nltk, gensim, regex
+- **Image Processing**: pillow, opencv, scikit-image, pytesseract
+- **Utilities**: tqdm, joblib, requests, beautifulsoup4, kaggle
+- **Development**: pytest, black, isort, flake8, mypy
+- **Jupyter Environment**: jupyter, notebook, ipykernel
+
+## Development
+
+For development, you can install optional development dependencies:
+
+```bash
+pip install -e ".[dev]"
+```
