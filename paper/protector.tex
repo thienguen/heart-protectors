@@ -220,17 +220,29 @@ place and saving lives.
     \end{tabular}
 \end{table}
 
-\section{Models Implemented}
-The project implements the following machine learning models for heart
-failure risk prediction:
-\begin{itemize}
-    \vspace{-0.25cm}
-    \item \textbf{Neural Network (NN)}: A feed-forward multilayer perceptron trained on the UCI dataset with early stopping and dropout regularization.
-    \item \textbf{Support Vector Machine (SVM)}: A kernelized SVM (linear and RBF kernels evaluated) optimized via grid search on the regularization parameter $C$ and kernel bandwidth.
-\end{itemize}
+\begin{table}[H]
+    \centering
+    \caption{Summary Statistics for Key Numerical Features}
+    \small
+    \begin{tabular}{|l|r|r|r|r|r|}
+        \hline
+        \textbf{Feature}    & \textbf{Mean} & \textbf{Std Dev} & \textbf{Min} & \textbf{Median} & \textbf{Max} \\
+        \hline
+        Age                 & 49.30         & 18.19            & 18.00        & 49.00           & 80.00        \\
+        Blood Pressure      & 149.76        & 17.57            & 120.00       & 150.00          & 180.00       \\
+        Cholesterol Level   & 225.43        & 43.58            & 150.00       & 226.00          & 300.00       \\
+        BMI                 & 29.08         & 6.31             & 18.00        & 29.08           & 40.00        \\
+        Sleep Hours         & 6.99          & 1.75             & 4.00         & 7.00            & 10.00        \\
+        Triglyceride Level  & 250.73        & 87.07            & 100.00       & 250.00          & 400.00       \\
+        Fasting Blood Sugar & 120.14        & 23.58            & 80.00        & 120.00          & 160.00       \\
+        CRP Level           & 7.47          & 4.34             & 0.00         & 7.47            & 15.00        \\
+        Homocysteine Level  & 12.46         & 4.32             & 5.00         & 12.41           & 20.00        \\
+        \hline
+    \end{tabular}
+\end{table}
+
 
 \section{Problems and Challenges}
-
 Throughout the development of our heart failure risk prediction system, we encountered various technical and methodological challenges that required careful consideration and innovative solutions.
 
 \subsection{Data Quality and Preprocessing Challenges}
@@ -243,62 +255,86 @@ Throughout the development of our heart failure risk prediction system, we encou
         fonttitle=\bfseries\sffamily\footnotesize,
         fontupper=\footnotesize
     ]
-    Our analysis of the heart disease dataset revealed:
+    Our initial analysis of the Heart Disease UCI dataset revealed:
     \begin{itemize}[leftmargin=*, itemsep=2pt, parsep=0pt]
-        \item Missing values in multiple columns (19-30 entries per column)
-        \item Substantial missing data in 'Alcohol Consumption' (2,586 of 10,000 entries missing)
-        \item Need for proper handling of both numerical and categorical features
-        \item Potential outliers requiring detection and treatment
+        \item Missing values in most columns (19-30 entries per column)
+        \item Significant missing data in 'Alcohol Consumption' (2,586 of 10,000 entries missing)
+        \item Mix of numerical features (9) and categorical features (12)
+        \item Need for proper data type conversion and standardization
     \end{itemize}
+
+    \textbf{Missing Values by Column:}
+
+    \begin{tabular}{lr|lr}
+        Age                  & 29 & High Blood Pressure  & 26    \\
+        Gender               & 19 & Low HDL Cholesterol  & 25    \\
+        Blood Pressure       & 19 & High LDL Cholesterol & 26    \\
+        Cholesterol Level    & 30 & Alcohol Consumption  & 2,586 \\
+        Exercise Habits      & 25 & Stress Level         & 22    \\
+        Smoking              & 25 & Sleep Hours          & 25    \\
+        Family Heart Disease & 21 & Sugar Consumption    & 30    \\
+        Diabetes             & 30 & Triglyceride Level   & 26    \\
+        BMI                  & 22 & Fasting Blood Sugar  & 22    \\
+                             &    & CRP Level            & 26    \\
+                             &    & Homocysteine Level   & 20    \\
+    \end{tabular}
 \end{tcolorbox}
-
-
-
-
 
 \subsubsection{Missing Values}
 \vspace{-0.25cm}
-One of the most significant challenges we faced was handling missing values in our datasets. Our initial analysis of the heart disease dataset revealed varying degrees of missing data across different features. Most notably, the 'Alcohol Consumption' feature had 2,586 missing values out of 10,000 entries (approximately 25.9\%), necessitating its complete removal from the dataset to maintain overall data integrity. Other features had fewer missing values (ranging from 19 to 30 entries), but still required appropriate handling techniques.
 
-To address this issue, we implemented a systematic approach:
+Our preprocessing approach for missing values involved these steps:
+
 \vspace{-0.25cm}
 \begin{itemize}
-    \item For numerical features (such as Age, Blood Pressure, Cholesterol Level, and BMI), we applied mean imputation to replace missing values with the average of each respective column.
-    \item For categorical features (such as Gender, Exercise Habits, and Smoking status), we employed mode imputation, replacing missing values with the most frequently occurring category in each column.
+    \vspace{-0.25cm}
+    \item \textbf{Feature removal}: We completely removed the 'Alcohol Consumption' feature due to excessive missing data (25.9\%).
+    \vspace{-0.25cm}
+    \item \textbf{Numerical imputation}: For numerical features, we replaced missing values with column means (affecting 19-30 entries per column).
+    \vspace{-0.25cm}
+    \item \textbf{Categorical imputation}: For categorical features, we replaced missing values with the most frequent value (mode) in each column.
 \end{itemize}
 
-This imputation strategy helped preserve the dataset's size while minimizing statistical bias, although we acknowledge that imputation can potentially introduce subtle distortions in the data distribution.
-
-\begin{lstlisting}
-# 1. For numerical columns - impute with mean
-numerical_columns = df.select_dtypes(include=[np.number]).columns
-# Fill missing values with the mean of each column
-df[numerical_columns] = df[numerical_columns].fillna(df[numerical_columns].mean())
-
-# 2. For categorical columns - impute with mode (most frequent value)
-categorical_columns = df.select_dtypes(exclude=[np.number]).columns
-# Fill missing values with the most frequent value (mode) for each column
-for col in categorical_columns:
-    df[col] = df[col].fillna(df[col].mode()[0])
-\end{lstlisting}
+\textbf{Results}: After preprocessing, all missing values were successfully handled, creating a complete dataset with 10,000 entries and 20 features (the original 21 minus Alcohol Consumption).
 
 \subsubsection{Feature Encoding and Transformation}
 \vspace{-0.25cm}
-Another challenge was the appropriate encoding of categorical variables for model training. Our dataset contained multiple categorical features that needed transformation into a format suitable for machine learning algorithms. While our preprocessing script identified categorical features for potential one-hot encoding, ensuring that these transformations maintained the semantic meaning of each category without introducing unintended relationships was challenging.
 
-Additionally, proper scaling of numerical features required careful consideration to prevent features with larger magnitude ranges (like Cholesterol Level) from dominating those with smaller ranges (like Age) during model training.
+For effective model training, we applied these transformations:
+
+\vspace{-0.25cm}
+\begin{itemize}
+    \vspace{-0.25cm}
+    \item \textbf{Categorical encoding}: Converted categorical variables to numerical form using one-hot encoding
+    \vspace{-0.25cm}
+    \item \textbf{Feature scaling}: Standardized numerical features to have zero mean and unit variance
+    \vspace{-0.25cm}
+    \item \textbf{Data type conversion}: Optimized data types (e.g., converted Gender to category type)
+\end{itemize}
+\vspace{-0.25cm}
+\textbf{Results}: These transformations produced a machine learning-ready dataset with properly scaled numerical features and encoded categorical variables, enabling efficient model training.
 
 \subsection{Methodological Challenges}
 
 \subsubsection{Feature Selection}
 \vspace{-0.25cm}
-Determining the most predictive features for heart failure risk presented a significant challenge. Our initial approach included using ANOVA F-tests to identify statistically significant features, but the effectiveness of this method varied across different subsets of our data. The interrelationships between various health indicators complicated the feature selection process, as some features that appeared individually insignificant could become important when considered in combination with others.
+Determining the most predictive features for heart failure risk
+presented a significant challenge.
+Our initial approach included using ANOVA
+F-tests to identify statistically significant features, but the
+effectiveness of this method varied across different subsets
+of our data.
+The interrelationships between various health indicators complicated the feature
+selection process, as some features that appeared
+individually insignificant could become important when
+considered in combination with others.
 
 \subsubsection{Model Selection and Optimization}
 \vspace{-0.25cm}
 Selecting the most appropriate machine learning models for heart failure prediction required balancing accuracy, interpretability, and computational efficiency. Our project implements Neural Network and Support Vector Machine models, each presenting unique challenges:
 
 \begin{itemize}
+    \vspace{-0.25cm}
     \item \textbf{\greencheck \space Neural Network (NN)}: Our deep learning approach required careful architecture design, including determining the optimal number of hidden layers, neurons per layer, and activation functions. Additionally, preventing overfitting through techniques like dropout and early stopping required extensive experimentation.
 
     \item \textbf{\greencheck \space Support Vector Machine (SVM)}: While effective for high-dimensional classification, optimizing SVM required extensive hyperparameter tuning, particularly for the regularization parameter (C) and kernel selection (linear, polynomial, RBF). Finding the right balance between model complexity and generalization capability was challenging.
@@ -306,17 +342,31 @@ Selecting the most appropriate machine learning models for heart failure predict
 
 \subsection{Implementation Challenges}
 
+???
+
+
 \subsubsection{Data Integration}
-Working with multiple datasets from different sources introduced integration challenges. Variations in feature naming conventions, units of measurement, and data collection methodologies across datasets required careful harmonization to create a unified and consistent training dataset.
+\vspace{-0.25cm}
+Working with multiple datasets from different sources
+introduced integration challenges.
+Variations in feature naming conventions, units of measurement,
+and data collection methodologies across datasets required
+careful harmonization to create a unified and consistent training dataset.
 
 \subsubsection{Cross-Validation Strategy}
-Implementing an appropriate cross-validation
-strategy was crucial for reliable model evaluation but
-presented challenges due to potential class imbalance in the
-target variable (heart disease status).
-Ensuring that each fold maintained representative
-distributions of both positive and negative cases required
-specialized stratification techniques.
+\vspace{-0.25cm}
+???
+
+% TODO: add the implementation of the models here
+\section{Models Implemented}
+The project implements the following machine learning models for heart
+failure risk prediction:
+\begin{itemize}
+    \vspace{-0.25cm}
+    \item \textbf{Neural Network (NN)}: A feed-forward multilayer perceptron trained on the UCI dataset with early stopping and dropout regularization.
+    \item \textbf{Support Vector Machine (SVM)}: A kernelized SVM (linear and RBF kernels evaluated) optimized via grid search on the regularization parameter $C$ and kernel bandwidth.
+\end{itemize}
+
 
 \begin{tcolorbox}[infobox={Insights and Solutions}]
     Despite these challenges, our team implemented several effective solutions:
