@@ -23,7 +23,7 @@ from models.model_knn import KNNModel
 from models.model_pca import PCAModel
 from models.model_rf import RandomForestModel
 from models.model_svm import SVMModel
-from preprocessing.preprocess import DataPreprocessor
+from src.process.process import DataPreprocessor
 
 
 class ModelTrainer:

@@ -2,6 +2,11 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+# from sklearn.preprocessing import OneHotEncoder
+# from sklearn.compose import ColumnTransformer
+# from sklearn.pipeline import Pipeline
+# from sklearn.feature_selection import SelectKBest, f_classif
 
 data = pd.read_csv("../../data/heart_disease.csv")
 df = pd.DataFrame(data)
@@ -20,7 +25,9 @@ print("Data Overview:")
 print(df.info())
 print(df.describe())
 print(df.head())
-print('----------------------------------------------------------------------------------------------')
+print(
+    "----------------------------------------------------------------------------------------------"
+)
 
 # Data Overview:
 # <class 'pandas.core.frame.DataFrame'>
@@ -71,10 +78,12 @@ print('-------------------------------------------------------------------------
 # [5 rows x 21 columns]
 
 # 2. Check for missing values
-missing_values = df.isnull().sum()
-print("\nMissing values in each column:")
-print(missing_values)
-print('----------------------------------------------------------------------------------------------')
+# missing_values = df.isnull().sum()
+# print("\nMissing values in each column:")
+# print(missing_values)
+# print(
+#     "----------------------------------------------------------------------------------------------"
+# )
 
 # Missing values in each column:
 # Age                       29
@@ -102,15 +111,115 @@ print('-------------------------------------------------------------------------
 # -----------------------------------------------------------
 
 # Drop 'Alcohol Consumption' column because it contain many missing Data
-df = df.drop(columns=['Alcohol Consumption'])
+df = df.drop(columns=["Alcohol Consumption"])
 
 # Check for missing values after dropping the column
-print("\nMissing values after dropping 'Alcohol Consumption' column:")
-print(df.isnull().sum())
-print('----------------------------------------------------------------------------------------------')
+# print("\nMissing values after dropping 'Alcohol Consumption' column:")
+# print(df.isnull().sum())
+# print(
+#     "----------------------------------------------------------------------------------------------"
+# )
 # First, it identifies the numerical columns (e.g., Age, Blood Pressure)
 # and imputes their missing values with the mean value of each column, using SimpleImputer.
 # Then, it identifies the categorical columns (e.g., Gender, Smoking) and
 # imputes their missing values with the most frequent value (mode) in each column.
 # The SimpleImputer is used for both numerical and categorical features to ensure that no missing values rema> in,
 # improving the dataset for further analysis or modeling :
+
+
+# 1. For numerical columns - impute with mean
+numerical_columns = df.select_dtypes(include=[np.number]).columns
+# Fill missing values with the mean of each column
+df[numerical_columns] = df[numerical_columns].fillna(df[numerical_columns].mean())
+
+# 2. For categorical columns - impute with mode (most frequent value)
+categorical_columns = df.select_dtypes(exclude=[np.number]).columns
+# Fill missing values with the most frequent value (mode) for each column
+for col in categorical_columns:
+    df[col] = df[col].fillna(df[col].mode()[0])
+
+# Check if any missing values remain
+# print("\nAfter handling missing values:")
+# print(df.isnull().sum())
+
+# Convert data types if necessary (e.g., 'Gender' from object to category)
+df["Gender"] = df["Gender"].astype("category")
+print(df.info())
+
+
+# First, it separates the data into features (X) and the target variable (y) for classification.
+# The features are categorized into numerical and categorical types.
+# Categorical variables are also one-hot encoded, which means each category is
+# turned into separate binary columns. After transforming the data, the code uses the
+# ANOVA F-test (via SelectKBest)
+# to evaluate the importance of each feature in predicting the target variable,
+# sorting them by their statistical scores.
+# Finally, it prints the sorted features, helping identify which variables are most relevant for classification.
+
+# 6. Identify relevant features using statistical tests (e.g., ANOVA F-value for classification)
+# Separate the features (X) and target variable (y)
+X = df.drop(
+    columns=["Heart Disease Status"]
+)  # Features (all columns except 'Heart Disease Status')
+y = df["Heart Disease Status"]  # Target variable ('Heart Disease Status')
+
+# Identify categorical and numerical features
+categorical_features = [
+    "Gender",
+    "Exercise Habits",
+    "Smoking",
+    "Family Heart Disease",
+    "Diabetes",
+    "High Blood Pressure",
+    "Low HDL Cholesterol",
+    "High LDL Cholesterol",
+    "Stress Level",
+    "Sleep Hours",
+    "Sugar Consumption",
+    "Triglyceride Level",
+    "Fasting Blood Sugar",
+    "CRP Level",
+    "Homocysteine Level",
+]
+numerical_features = ["Age", "Blood Pressure", "Cholesterol Level", "BMI"]
+
+
+# # Apply the preprocessor to transform the data
+# X_processed = preprocessor.fit_transform(X)
+
+# # Get the column names for the categorical features after one-hot encoding
+# # OneHotEncoder creates binary columns for each unique category in categorical features
+# ohe_columns = preprocessor.transformers_[1][1].named_steps['onehot'].get_feature_names_out(categorical_features)
+
+# # Combine the original numerical columns and the new one-hot encoded columns
+# columns = numerical_features + ohe_columns.tolist()
+
+# # Create a DataFrame with the transformed data
+# X_processed_df = pd.DataFrame(X_processed, columns=columns)
+
+# # 7. Select the best features using SelectKBest (ANOVA F-statistic)
+# selector = SelectKBest(score_func=f_classif, k='all')  # Select all features
+# selector.fit(X_processed_df, y)  # Fit the selector with the transformed data
+
+# # Get the scores for each feature and sort them
+# feature_scores = pd.DataFrame({
+#     'Feature': columns,  # Feature names (after encoding)
+#     'Score': selector.scores_  # ANOVA F-statistic scores
+# })
+
+# # Sort the features by score in descending order
+# sorted_features = feature_scores.sort_values(by='Score', ascending=False)
+
+# # Print the relevant features based on the ANOVA F-value
+# print("\nRelevant Features based on ANOVA F-value:")
+# print(sorted_features)
+
+# 8. Data splitting (Training and Validation sets)
+# Split the data into training (80%) and test (20%) sets
+# X_train, X_test, y_train, y_test = train_test_split(
+#     X, y, test_size=0.2, random_state=42
+# )
+
+# # You can print the shape of the datasets to confirm
+# print(f"Training set size: {X_train.shape}")
+# print(f"Test set size: {X_test.shape}")
