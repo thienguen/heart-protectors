@@ -216,10 +216,16 @@ numerical_features = ["Age", "Blood Pressure", "Cholesterol Level", "BMI"]
 
 # 8. Data splitting (Training and Validation sets)
 # Split the data into training (80%) and test (20%) sets
-# X_train, X_test, y_train, y_test = train_test_split(
-#     X, y, test_size=0.2, random_state=42
-# )
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
 
-# # You can print the shape of the datasets to confirm
-# print(f"Training set size: {X_train.shape}")
-# print(f"Test set size: {X_test.shape}")
+# You can print the shape of the datasets to confirm
+print(f"Training set size: {X_train.shape}")
+print(f"Test set size: {X_test.shape}")
+
+# Training set size: (8000, 19)
+# Test set size: (2000, 19)
+
+# Save the cleaned data
+df.to_csv('cleaned_heart_disease.csv', index=False)
