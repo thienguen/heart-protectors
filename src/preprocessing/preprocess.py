@@ -100,3 +100,17 @@ print('-------------------------------------------------------------------------
 # Heart Disease Status       0
 # dtype: int64
 # -----------------------------------------------------------
+
+# Drop 'Alcohol Consumption' column because it contain many missing Data
+df = df.drop(columns=['Alcohol Consumption'])
+
+# Check for missing values after dropping the column
+print("\nMissing values after dropping 'Alcohol Consumption' column:")
+print(df.isnull().sum())
+print('----------------------------------------------------------------------------------------------')
+# First, it identifies the numerical columns (e.g., Age, Blood Pressure)
+# and imputes their missing values with the mean value of each column, using SimpleImputer.
+# Then, it identifies the categorical columns (e.g., Gender, Smoking) and
+# imputes their missing values with the most frequent value (mode) in each column.
+# The SimpleImputer is used for both numerical and categorical features to ensure that no missing values rema> in,
+# improving the dataset for further analysis or modeling :

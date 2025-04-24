@@ -23,7 +23,7 @@ heart-protectors/
 │   ├── heart_failure_clinical_records_dataset.csv
 │   ├── heart.csv
 │   └── heart_disease.csv
-├── research/                       # Jupyter notebooks for analysis
+├── notebooks/                      # Jupyter notebooks for analysis
 │   └── heart_disease_eda.ipynb     # Exploratory Data Analysis
 ├── src/                            # Source code
 │   ├── preprocessing/              # Data preprocessing scripts
