@@ -1,37 +1,39 @@
 import pandas as pd
+import numpy as np
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split, KFold
+from sklearn.metrics import (
+    accuracy_score,
+    precision_score,
+    recall_score,
+    f1_score,
+    roc_auc_score,
+)
 
 
-def knnTestAccuracy(scaleTrainX, trainY, scaleTestX, testY, k):
-    # Do the KNN clasification
+# ------------------------- helper ---------------------------------
+def knn_metrics(X_train, y_train, X_test, y_test, k=5):
+    """Train KNN(k) and return dict of evaluation metrics on X_test/y_test."""
     knn = KNeighborsClassifier(n_neighbors=k)
-    knn.fit(scaleTrainX, trainY)
-    prediction = knn.predict(scaleTestX)
+    knn.fit(X_train, y_train)
 
-    # Convert the result and testing sets to arrays
-    predictionList = list(prediction)
-    testYList = list(testY)
+    y_pred = knn.predict(X_test)
+    y_proba = knn.predict_proba(X_test)[:, 1]
 
-    # Get the count of correct predictions
-    count = 0
-
-    for i in range(len(predictionList)):
-        if predictionList[i] == testYList[i]:
-            count += 1
-
-    # Get and return the accuracy
-    accuracy = count / len(predictionList)
-
-    return accuracy
+    return {
+        "accuracy": accuracy_score(y_test, y_pred),
+        "precision": precision_score(y_test, y_pred, zero_division=0),
+        "recall": recall_score(y_test, y_pred, zero_division=0),
+        "f1": f1_score(y_test, y_pred, zero_division=0),
+        "auc": roc_auc_score(y_test, y_proba),
+    }
 
 
-# Read the data
+# ------------------------- load & encode --------------------------
 data = pd.read_csv("../../process/cleaned_heart_disease.csv")
 
-# Preprocess the data so that strings are converted to numbers
-binaryColumns = [
+binary_cols = [
     "Gender",
     "Smoking",
     "Family Heart Disease",
@@ -41,74 +43,65 @@ binaryColumns = [
     "High LDL Cholesterol",
     "Heart Disease Status",
 ]
+ordinal_cols = ["Exercise Habits", "Stress Level", "Sugar Consumption"]
+ordinal_map = {"Low": 0, "Medium": 1, "High": 2}
 
-# Handling columns with low, med, and high
-multiValueColumns = ["Exercise Habits", "Stress Level", "Sugar Consumption"]
-multiValues = {"Low": 0, "Medium": 1, "High": 2}
-
-for col in binaryColumns:
-    # Check for strings
+for col in binary_cols:
     if data[col].dtype == "object":
-        categories = data[col].unique()
-        newValues = {categories[0]: 0, categories[1]: 1}
-        data[col] = data[col].map(newValues)
+        cats = data[col].unique()
+        data[col] = data[col].map({cats[0]: 0, cats[1]: 1})
 
-# Convert columns with multiple values to numbers
-for col in multiValueColumns:
-    print(f" Mapping for {col}: {multiValues}")
-    data[col] = data[col].map(multiValues)
+for col in ordinal_cols:
+    data[col] = data[col].map(ordinal_map)
 
-# Show new data
-print("\nColumns after encoding:")
-print(data.columns)
-print("\nFirst few rows after encoding:")
-print(data.head())
-
-# Get the daa to test and the labels
-x = data.drop(columns=["Heart Disease Status"])
+X = data.drop(columns="Heart Disease Status")
 y = data["Heart Disease Status"]
 
+# ------------------------- hold-out test --------------------------
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.20, random_state=0, stratify=y
+)
 
-# Split the data. 20% for testing, 80% for training
-trainX, testX, trainY, testY = train_test_split(x, y, test_size=0.2, random_state=0)
-
-# Normalize the scale of the x data
 scaler = StandardScaler()
-scaleTrainX = scaler.fit_transform(trainX)
-scaleTestX = scaler.transform(testX)
+X_train_s = scaler.fit_transform(X_train)
+X_test_s = scaler.transform(X_test)
 
-# Print percentages for different k values
-for i in range(10):
-    print(f"{knnTestAccuracy(scaleTrainX, trainY, scaleTestX, testY, i + 1):.0%}")
+K_CHOSEN = 5  # ← adjust if you prefer another k
+metrics = knn_metrics(X_train_s, y_train, X_test_s, y_test, k=K_CHOSEN)
+print(f"\n=== Hold-out evaluation (k={K_CHOSEN}) ===")
+for m, v in metrics.items():
+    print(f"{m:9s}: {v:.3f}  ({v * 100:.1f}%)")
 
-average = 0
-# Add averages of various K values (1-10)
-for i in range(10):
-    average += knnTestAccuracy(scaleTrainX, trainY, scaleTestX, testY, i + 1)
+# ------------------------- coarse grid (k = 1 … 10) ---------------
+print("\nAccuracy for k = 1 … 10 (hold-out split):")
+for k in range(1, 11):
+    acc = knn_metrics(X_train_s, y_train, X_test_s, y_test, k)["accuracy"]
+    print(f" k={k:2d}: {acc:.3f}  ({acc * 100:.1f}%)")
 
-print(f"{(average / 10):.0%}")
+mean_acc = np.mean(
+    [
+        knn_metrics(X_train_s, y_train, X_test_s, y_test, k)["accuracy"]
+        for k in range(1, 11)
+    ]
+)
+print(f"\nMean accuracy (k=1–10): {mean_acc:.3f}  ({mean_acc * 100:.1f}%)")
 
-# Cross-validation using k-folds from 5 to 20
-
-print("\nK-Fold Cross-Validation Accuracies (k=5 to 20):")
+# ------------------------- k-fold cross-val (accuracy only) -------
+print("\nK-Fold Cross-Validation Accuracies (k folds = 5 … 20, kNN k=5):")
 for folds in range(5, 21):
     kf = KFold(n_splits=folds, shuffle=True, random_state=0)
-    foldAccuracies = []
+    fold_acc = []
 
-    for trainIndex, testIndex in kf.split(x):
-        # Split the data into training and testing for this fold
-        foldTrainX, foldTestX = x.iloc[trainIndex], x.iloc[testIndex]
-        foldTrainY, foldTestY = y.iloc[trainIndex], y.iloc[testIndex]
+    for train_idx, test_idx in kf.split(X):
+        X_tr, X_te = X.iloc[train_idx], X.iloc[test_idx]
+        y_tr, y_te = y.iloc[train_idx], y.iloc[test_idx]
 
-        # Normalize the scale of the x data for this fold
-        scaler = StandardScaler()
-        scaleFoldTrainX = scaler.fit_transform(foldTrainX)
-        scaleFoldTestX = scaler.transform(foldTestX)
+        sc = StandardScaler()
+        X_tr_s = sc.fit_transform(X_tr)
+        X_te_s = sc.transform(X_te)
 
-        # Use k=5 for KNN in cross-validation
-        acc = knnTestAccuracy(scaleFoldTrainX, foldTrainY, scaleFoldTestX, foldTestY, 5)
-        foldAccuracies.append(acc)
+        fold_acc.append(knn_metrics(X_tr_s, y_tr, X_te_s, y_te, k=K_CHOSEN)["accuracy"])
 
-    # Get and print the average accuracy for this number of folds
-    averageAccuracy = sum(foldAccuracies) / len(foldAccuracies)
-    print(f"{folds}-fold: {averageAccuracy:.0%}")
+    print(
+        f" {folds:2d}-fold: {np.mean(fold_acc):.3f}  ({np.mean(fold_acc) * 100:.1f}%)"
+    )
