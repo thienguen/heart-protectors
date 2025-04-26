@@ -1,18 +1,14 @@
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.model_selection import KFold, train_test_split
-from sklearn.preprocessing import (
-    MinMaxScaler,
-    OneHotEncoder,
-    OrdinalEncoder,
-    StandardScaler,
-)
+from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder, StandardScaler
+from tensorflow.keras import Input
 from tensorflow.keras.layers import Dense, Dropout
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.regularizers import L1, L2
-from tensorflow.keras.utils import to_categorical
 
 np.set_printoptions(threshold=np.inf)
 
@@ -56,15 +52,18 @@ def main():
     )
     standardize_transformer = ColumnTransformer(
         transformers=[
-            ("std", MinMaxScaler(feature_range=(0, 1)), features_to_standardize),
+            ("std", StandardScaler(), features_to_standardize),
         ],
         remainder="passthrough",
     )
 
-    X, X_eval, y, y_eval = train_test_split(X, y, test_size=0.2, random_state=0)
-    cv = KFold(n_splits=20, shuffle=True, random_state=None)
-    res_train = [None] * 20
-    res_test = [None] * 20
+    X, X_eval, y, y_eval = train_test_split(X, y, test_size=0.2, random_state=4)
+    NUM_OF_FOLDS = 20
+    cv = KFold(n_splits=NUM_OF_FOLDS)
+    res_train = [None] * NUM_OF_FOLDS
+    res_test = [None] * NUM_OF_FOLDS
+    metrics = [None] * NUM_OF_FOLDS
+    metrics_to_measure = ["accuracy", "recall", "precision", "auc", "f1_score"]
 
     for fold_i, (train_i, test_i) in enumerate(cv.split(X)):
         X_train, X_test = X.iloc[train_i], X.iloc[test_i]
@@ -89,17 +88,17 @@ def main():
 
         model = Sequential(
             [
+                Input(shape=(input_dim,)),
                 Dense(
                     hidden_layer_nodes,
-                    activation="relu",
-                    input_dim=input_dim,
+                    activation=hidden_layer_activation,
                     kernel_regularizer="l1",
                     activity_regularizer="l2",
                 ),
                 Dropout(0.05),
                 Dense(
                     hidden_layer_nodes,
-                    activation="relu",
+                    activation=hidden_layer_activation,
                     kernel_regularizer="l2",
                 ),
                 Dense(output_layer_nodes, activation=output_layer_activation),
@@ -107,10 +106,11 @@ def main():
         )
 
         model.compile(
-            optimizer=Adam(), loss="binary_crossentropy", metrics=["accuracy"]
+            optimizer=Adam(), loss="binary_crossentropy", metrics=metrics_to_measure
         )
 
-        print(model.summary())
+        if fold_i == 0:
+            print(model.summary())
 
         model.fit(
             X_train.astype("float32"),
@@ -129,14 +129,19 @@ def main():
             (train_pred == train_true).sum() / len(train_pred) * 100, 2
         )
         print("Model accuracy with test data: " + str(test_accuracy) + "%")
-        print("Model accuracy with training data: " + str(train_accuracy) + "%")
+        print("Model accuracy with training data: " + str(train_accuracy) + "%\n")
+
         res_test[fold_i] = test_accuracy
         res_train[fold_i] = train_accuracy
+        metrics[fold_i] = model.get_metrics_result().copy()
+        if fold_i == NUM_OF_FOLDS - 1:
+            print(model.evaluate(X_test.astype("float32"), y_test, return_dict=True))
 
+    print("\n--RESULTS--\n")
     print("Test data accuracy: ")
-    print(res_test)
+    print([float(i) for i in res_test])
     print("Train data accuracy: ")
-    print(res_train)
+    print([float(i) for i in res_train])
     print(
         "Average test data accuracy: "
         + str(round(sum(res_test) / len(res_test), 2))
@@ -147,6 +152,40 @@ def main():
         + str(round(sum(res_train) / len(res_train), 2))
         + "%"
     )
+
+    def print_metric(metric: str):
+        if metric == "f1_score":
+            return
+        print(
+            "Average "
+            + metric
+            + ": "
+            + str(sum([float(m[metric]) for m in metrics]) / len(metrics))
+        )
+
+    for m in metrics_to_measure:
+        print_metric(m)
+
+    print(
+        "Average f1_score: "
+        + str(sum([m["f1_score"][0].numpy() for m in metrics]) / len(metrics))
+    )
+
+    plt.figure(figsize=(4, 8))
+    plt.plot(np.arange(1, NUM_OF_FOLDS + 1), res_test)
+    plt.xticks(np.arange(1, NUM_OF_FOLDS + 1))
+    plt.yticks(np.arange(70, 100))
+    plt.axhline(
+        y=round(sum(res_test) / len(res_test), 2),
+        color="gray",
+        alpha=0.3,
+        linestyle="--",
+    )
+    plt.title("Accuracy per Fold", fontweight="bold", fontsize="x-large")
+    plt.xlabel("Fold number", fontweight="semibold", fontsize="large")
+    plt.ylabel("Accuracy %", fontweight="semibold", fontsize="large")
+    plt.show()
+
     return
 
 
