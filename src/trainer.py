@@ -19,7 +19,7 @@ from sklearn.metrics import (
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # Import our model implementations
-from models.model_knn import KNNModel
+from src.models.knn.other_knn import KNNModel
 from models.model_pca import PCAModel
 from models.model_rf import RandomForestModel
 from models.model_svm import SVMModel
