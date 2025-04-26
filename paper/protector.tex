@@ -156,7 +156,7 @@
 \begin{tabular}{ll}
     \textbf{Team Name:}         & Heart Protectors    \\
     \textbf{Team Leader:}       & Thien Van Ky Nguyen \\
-    \textbf{Team Members:}      & ?, ?, ?, ?          \\
+    \textbf{Team Members:}      & Marcos Villanueva Abreu, ?, ?, ?          \\
     \textbf{Meeting Date/Time:} & April 23, 2025      \\
     \textbf{Attendees:}         & All team members
 \end{tabular}
@@ -395,9 +395,9 @@ Selecting the most appropriate machine learning models for heart failure predict
 \end{itemize}
 
 \subsection{Implementation Challenges}
-
-???
-
+\begin{itemize}
+    \item \textbf{Neural Network (NN)} - During development, our neural network model encountered a very common issue, overfitting. The initial implementation would have 94\% accuracy on average with the training data, and 70\% accuracy on average with the testing data. To battle this overfitting issue, a dropout layer and regularization was implemented.
+\end{itemize}
 
 \subsubsection{Data Integration}
 \vspace{-0.25cm}
@@ -435,7 +435,7 @@ failure risk prediction:
 
 \section{Each Member's Implementation and Evaluation}
 
-\subsection{Member 1 (Name, graduate/undergraduate)}
+\subsection{Member 1 (Marcos Villanueva Abreu, undergraduate)}
 
 \begin{tcolorbox}[
         title=Neural Network Implementation,
@@ -449,20 +449,21 @@ failure risk prediction:
 
     The Neural Network model was implemented with the following key components:
     \begin{itemize}[leftmargin=*, itemsep=2pt, parsep=0pt]
-        \item a
-        \item a
-        \item a
-        \item a
-        \item a
+        \item Two hidden layers, and one dropout layer that sets 5\% of the inputs to 0.
+        \item Each hidden layer has 512 nodes and used ReLU as their activation function.
+        \item Output layer has 2 nodes (binary classification).
+        \item Hidden layers use L1 and L2 regularization to reduce overfitting.
+        \item Data is standardized, nominal values are one hot encoded and ordinal values are encoded with an ordinal encoder. 
+        \item Input layer has 26 nodes (7 additional nodes from the 19 features due to the encoding). 
     \end{itemize}
 
     \textbf{Evaluation Results:}
     \begin{itemize}[leftmargin=*, itemsep=2pt, parsep=0pt]
-        \item Accuracy:
-        \item Precision:
-        \item Recall:
-        \item F1 Score:
-        \item AUC-ROC:
+        \item Accuracy: 80.43\%
+        \item Precision: 80.43\%
+        \item Recall: 80.43\%
+        \item F1 Score: 89.15\%
+        \item AUC-ROC: 80.43\%
     \end{itemize}
 \end{tcolorbox}
 
@@ -558,5 +559,8 @@ failure risk prediction:
         \item AUC-ROC:
     \end{itemize}
 \end{tcolorbox}
+
+\section{Discussion}
+
 
 \end{document}
