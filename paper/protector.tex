@@ -563,6 +563,9 @@ failure risk prediction:
 \end{tcolorbox}
 
 \section{Discussion}
+\begin{itemize}
+    \item \textbf{Neural Network (NN)} - As we can observe above from the evaluation results of the model, the accuracy, recall, and precision are the same values while the AUC is very similar (the last couple of decimal points are different) to the values of the aforementioned metrics. This could be that the model is prediction the samples correctly meaning there are no False Positives or False Negatives, this is really rare so it would be something our team would further need to investigate in order to improve this models performance. Another thing that caught our attention is that it was very common for the neural network to have the same training and testing accuracy average while validating the model using K-fold. The actual values for training and testing data accuracy were different in each fold but the overall accuracy tended to be the same for both.
+\end{itemize}
 
 
 \end{document}
