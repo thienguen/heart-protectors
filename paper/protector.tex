@@ -272,7 +272,7 @@ improve patient outcomes, and reduce healthcare costs.
 %     \centering
 %     \caption{Summary Statistics for Key Numerical Features}
 %     \small
-%     \begin{tabular}{|l|r|r|r|r|r|}
+%     \begin{tabular}{|l|r|r|r|r|r|r|}
 %         \hline
 %         \textbf{Feature}    & \textbf{Mean} & \textbf{Std Dev} & \textbf{Min} & \textbf{Median} & \textbf{Max} \\
 %         \hline
@@ -390,7 +390,7 @@ Selecting the most appropriate machine learning models for heart failure predict
     \vspace{-0.25cm}
     \item \textbf{\greencheck \space Neural Network (NN)}: Our deep learning approach required careful architecture design, including determining the optimal number of hidden layers, neurons per layer, and activation functions. Additionally, preventing overfitting through techniques like dropout and early stopping required extensive experimentation.
 
-    \item \textbf{\greencheck \space Support Vector Machine (SVM)}: While effective for high-dimensional classification, optimizing SVM required extensive hyperparameter tuning, particularly for the regularization parameter (C) and kernel selection (linear, polynomial, RBF). Finding the right balance between model complexity and generalization capability was challenging.
+    \item \textbf{\greencheck \space Decision Tree Classifier}: While effective for high-dimensional classification, optimizing SVM required extensive hyperparameter tuning, particularly for the regularization parameter (C) and kernel selection (linear, polynomial, RBF). Finding the right balance between model complexity and generalization capability was challenging.
 \end{itemize}
 
 \subsection{Implementation Challenges}
@@ -420,20 +420,20 @@ failure risk prediction:
 \begin{itemize}
     \vspace{-0.25cm}
     \item \textbf{Neural Network (NN)}: A feed-forward multilayer perceptron trained on the UCI dataset with early stopping and dropout regularization.
-    \item \textbf{Support Vector Machine (SVM)}: A kernelized SVM (linear and RBF kernels evaluated) optimized via grid search on the regularization parameter $C$ and kernel bandwidth.
+    \item \textbf{Decision Tree Classifier}: A decision tree classifier wrapped in an \texttt{imblearn} pipeline
 \end{itemize}
 
 
-\begin{tcolorbox}[infobox={Insights and Solutions}]
-    Despite these challenges, our team implemented several effective solutions:
-    \vspace{-0.25cm}
-    \begin{itemize}
-        \item a
-        \item a
-        \item a
-        \item a
-    \end{itemize}
-\end{tcolorbox}
+% \begin{tcolorbox}[infobox={Insights and Solutions}]
+%     Despite these challenges, our team implemented several effective solutions:
+%     \vspace{-0.25cm}
+%     \begin{itemize}
+%         \item a
+%         \item a
+%         \item a
+%         \item a
+%     \end{itemize}
+% \end{tcolorbox}
 
 \section{Each Member's Implementation and Evaluation}
 
@@ -469,34 +469,41 @@ failure risk prediction:
     \end{itemize}
 \end{tcolorbox}
 
-\subsection{Member 2 (Name, graduate/undergraduate)}
+\subsection{Member 2 (Van Ky Thien Nguyen, graduate)}
 
-\begin{tcolorbox}[
-        title=Support Vector Machine Implementation,
+\begin{tcolorbox}[%
+        title=Decision Tree Classifier Implementation,
         colback=lightpurple!30,
         colframe=mediumpurple,
         boxrule=0.5pt,
         fonttitle=\bfseries\sffamily\footnotesize,
         fontupper=\footnotesize
     ]
-    \textbf{Model and Implementation details:}
-
-    The SVM implementation featured:
+    \textbf{Model and implementation details:}
     \begin{itemize}[leftmargin=*, itemsep=2pt, parsep=0pt]
-        \item a
-        \item a
-        \item a
-        \item a
-        \item a
+        \item Decision-tree classifier wrapped in an \texttt{imblearn} pipeline
+        \item Grid-search hyper-tuning for \verb|max_depth| $\in\{3,5,7,\text{None}\}$ and \verb|min_samples_leaf| $\in\{1,5,10\}$
+        \item SMOTE oversampling to combat class imbalance
+        \item One-hot encoding for any nominal categorical features (none in this run)
+        \item Stratified $k$-fold cross-validation with $k\in\{5,\dots,20\}$, executed sequentially (\verb|n_jobs=1|)
     \end{itemize}
 
-    \textbf{Evaluation Results:}
+    \textbf{Evaluation results ($k$-fold, $k=5\text{–}20$):}
     \begin{itemize}[leftmargin=*, itemsep=2pt, parsep=0pt]
-        \item Accuracy:
-        \item Precision:
-        \item Recall:
-        \item F1 Score:
-        \item AUC-ROC:
+        \item Accuracy: \textbf{65.9 \% – 73.3 \%}
+        \item Precision: \textbf{6.9 \% – 15.1 \%}
+        \item Recall: \textbf{11.8 \% – 25.8 \%}
+        \item F\textsubscript{1} score: \textbf{8.7 \% – 19.0 \%}
+        \item AUC-ROC: \textbf{50.2 \% – 51.9 \%}
+    \end{itemize}
+
+    \textbf{Train-on-full dataset snapshot:}
+    \begin{itemize}[leftmargin=*, itemsep=2pt, parsep=0pt]
+        \item Accuracy: 60.5 \%
+        \item Precision: 21.4 \%
+        \item Recall: 36.5 \%
+        \item F\textsubscript{1} score: 27.0 \%
+        \item AUC-ROC: 52.2 \%
     \end{itemize}
 \end{tcolorbox}
 
@@ -564,7 +571,20 @@ failure risk prediction:
 
 \section{Discussion}
 \begin{itemize}
-    \item \textbf{Neural Network (NN)} - As we can observe above from the evaluation results of the model, the accuracy, recall, and precision are the same values while the AUC is very similar (the last couple of decimal points are different) to the values of the aforementioned metrics. This could be that the model is prediction the samples correctly meaning there are no False Positives or False Negatives, this is really rare so it would be something our team would further need to investigate in order to improve this models performance. Another thing that caught our attention is that it was very common for the neural network to have the same training and testing accuracy average while validating the model using K-fold. The actual values for training and testing data accuracy were different in each fold but the overall accuracy tended to be the same for both.
+    \item \textbf{Neural Network (NN)} - As we can observe above from the evaluation
+          results of the model, the accuracy, recall,
+          and precision are the same values while the AUC is very similar
+          (the last couple of decimal points are different) to the values
+          of the aforementioned metrics. This
+          could be that the model is prediction the samples correctly meaning
+          there are no False Positives or False Negatives, this
+          is really rare so it would be something our team would further need to investigate in order to improve this models performance. Another thing that caught our attention is that it was very common for the neural network to have the same training and testing accuracy average while validating the model using K-fold. The actual values for training and testing data accuracy were different in each fold but the overall accuracy tended to be the same for both.
+    \item \textbf{Decision Tree Classifier} – While cross-validated accuracy is respectable
+          $\,\approx$\,\textbf{66--73\%},
+          the model’s precision and recall remain low ($\approx$\,\textbf{7--26\%}), and its AUC stays just above random chance
+          ($\approx$\,\textbf{50--52\%}). These figures indicate the tree still struggles to isolate positive cases despite oversampling and tuning. Future work should investigate richer feature engineering, ensemble variants (e.g., balanced random forests, gradient boosting), or cost-sensitive learning to lift minority-class detection without sacrificing overall stability.
+
+
 \end{itemize}
 
 
