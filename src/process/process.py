@@ -3,6 +3,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
+import missingno as msno
 # from sklearn.preprocessing import OneHotEncoder
 # from sklearn.compose import ColumnTransformer
 # from sklearn.pipeline import Pipeline
@@ -109,6 +110,36 @@ print(
 # Heart Disease Status       0
 # dtype: int64
 # -----------------------------------------------------------
+
+# total missing values
+df.isnull().sum().sum()
+
+# we should get a matrix, will put this in latex
+# Matrix
+# fig = plt.figure()
+# ax = msno.matrix(df)
+# fig = ax.get_figure()
+# fig.savefig("../../paper/pictures/missing_values_matrix.png")
+# plt.close(fig)
+
+# # Heatmap
+# fig = plt.figure()
+# ax = msno.heatmap(df)
+# fig = ax.get_figure()
+# fig.savefig("../../paper/pictures/missing_values_heatmap.png")
+# plt.close(fig)
+
+# use this only
+# msno.matrix(df)
+# msno.heatmap(df)
+
+# outliers?
+# plt.figure(figsize=(14, 8))
+# sns.boxplot(df)
+# plt.show()
+
+# There are no outlier detected in the dataset
+
 
 # Drop 'Alcohol Consumption' column because it contain many missing Data
 df = df.drop(columns=["Alcohol Consumption"])
@@ -228,4 +259,4 @@ print(f"Test set size: {X_test.shape}")
 # Test set size: (2000, 19)
 
 # Save the cleaned data
-df.to_csv('cleaned_heart_disease.csv', index=False)
+df.to_csv("cleaned_heart_disease.csv", index=False)

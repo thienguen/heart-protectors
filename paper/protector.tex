@@ -283,15 +283,37 @@ Throughout the development of our heart failure risk prediction system, we encou
 \subsubsection{Missing Values}
 \vspace{-0.25cm}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{./pictures/missing_values_matrix.png}
+    \caption{Missing Values Matrix Visualization}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{./pictures/missing_values_heatmap.png}
+    \caption{Missing Values Heatmap Visualization}
+\end{figure}
+
+The visualizations above helped us identify patterns in missing data. The matrix shows which data points are missing across all features, while the heatmap reveals correlations in missingness between variables. The 'Alcohol Consumption' feature clearly shows the highest rate of missing values.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{./pictures/outliers.png}
+    \caption{Boxplot Analysis for Outlier Detection}
+\end{figure}
+
+Our outlier analysis using boxplots showed no significant outliers in the numerical features that would require special treatment. This allowed us to proceed with the preprocessing without additional outlier handling steps.
+
 Our preprocessing approach for missing values involved these steps:
 
 \vspace{-0.25cm}
 \begin{itemize}
     \vspace{-0.25cm}
     \item \textbf{Feature removal}: We completely removed the 'Alcohol Consumption' feature due to excessive missing data (25.9\%).
-    \vspace{-0.25cm}
+          \vspace{-0.25cm}
     \item \textbf{Numerical imputation}: For numerical features, we replaced missing values with column means (affecting 19-30 entries per column).
-    \vspace{-0.25cm}
+          \vspace{-0.25cm}
     \item \textbf{Categorical imputation}: For categorical features, we replaced missing values with the most frequent value (mode) in each column.
 \end{itemize}
 
@@ -306,9 +328,9 @@ For effective model training, we applied these transformations:
 \begin{itemize}
     \vspace{-0.25cm}
     \item \textbf{Categorical encoding}: Converted categorical variables to numerical form using one-hot encoding
-    \vspace{-0.25cm}
+          \vspace{-0.25cm}
     \item \textbf{Feature scaling}: Standardized numerical features to have zero mean and unit variance
-    \vspace{-0.25cm}
+          \vspace{-0.25cm}
     \item \textbf{Data type conversion}: Optimized data types (e.g., converted Gender to category type)
 \end{itemize}
 \vspace{-0.25cm}
@@ -319,7 +341,24 @@ For effective model training, we applied these transformations:
 \subsubsection{Feature Selection}
 \vspace{-0.25cm}
 Determining the most predictive features for heart failure risk
-presented a significant challenge.
+presented a significant challenge. Through visualizations and statistical analysis, we identified several key predictors:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{./pictures/blood_pressure_categories_vs_heart_disease_status.png}
+    \caption{Blood Pressure Categories vs Heart Disease Status}
+\end{figure}
+
+\textbf{Blood Pressure}: Analysis shows that individuals with higher blood pressure tend to have a higher incidence of heart disease.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{./pictures/smoking_vs_heart_disease_status.png}
+    \caption{Smoking vs Heart Disease Status}
+\end{figure}
+
+\textbf{Smoking}: Our visualization reveals a clear relationship between smoking habits and heart disease status.
+
 Our initial approach included using ANOVA
 F-tests to identify statistically significant features, but the
 effectiveness of this method varied across different subsets
