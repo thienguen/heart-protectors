@@ -163,22 +163,22 @@
 
 \section{Project Topic / Service Scenario}
 
-Our project uses several machine learning models to predict heart failure
-risks from health data.
-Heart failure is a big health problem worldwide that affects
-millions of people and puts a huge strain on hospitals and
-healthcare systems.
-Current methods for detecting heart failure risk
-aren't great at catching problems early,
-which means patients often don't get help until it's too late.
+\textbf{Abstract:} Our project implements advanced machine learning techniques to predict heart failure
+risk based on comprehensive health data.
+Cardiovascular disease remains one of the leading causes of mortality worldwide,
+with heart failure affecting millions of patients and placing significant
+burden on healthcare systems.
+Traditional diagnostic approaches often fail to identify
+at-risk individuals until symptoms become severe,
+resulting in delayed intervention and poorer outcomes.
 
-We're building a tool that can spot
-people who might be at risk of heart failure by
-looking at their health information.
-This could help doctors take action sooner
-with patients who are at high risk, possibly
-preventing heart failure from happening in the first
-place and saving lives.
+We propose a predictive analytics framework that identifies high-risk
+individuals through analysis of clinical and demographic data.
+This system employs supervised learning algorithms to generate risk
+assessments that could enable clinicians to implement early preventive measures.
+By facilitating timely intervention, our approach has the potential to
+reduce heart failure incidence, improve patient outcomes, and optimize healthcare resource allocation.
+
 % The system uses machine learning to analyze
 % health data and calculate risk scores that
 % doctors could use alongside their regular patient information systems.
@@ -196,54 +196,41 @@ place and saving lives.
 
 \begin{table}[H]
     \centering
-    \caption{Heart Disease UCI Dataset Features}
-    \begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
-        \hline
-        \textbf{Categorical Features} & \textbf{Numerical Features} \\
-        \hline
-        Gender                        & Age                         \\
-        Exercise Habits               & Blood Pressure              \\
-        Smoking                       & Cholesterol Level           \\
-        Family Heart Disease          & BMI                         \\
-        Diabetes                      &                             \\
-        High Blood Pressure           &                             \\
-        Low HDL Cholesterol           &                             \\
-        High LDL Cholesterol          &                             \\
-        Stress Level                  &                             \\
-        Sleep Hours                   &                             \\
-        Sugar Consumption             &                             \\
-        Triglyceride Level            &                             \\
-        Fasting Blood Sugar           &                             \\
-        CRP Level                     &                             \\
-        Homocysteine Level            &                             \\
-        \hline
-    \end{tabular}
-\end{table}
-
-\begin{table}[H]
-    \centering
-    \caption{Summary Statistics for Key Numerical Features}
+    \caption{Features Overview with Summary Statistics (Numerical Only)}
     \small
-    \begin{tabular}{|l|r|r|r|r|r|}
+    \begin{tabular}{|l|l|r|r|r|r|r|}
         \hline
-        \textbf{Feature}    & \textbf{Mean} & \textbf{Std Dev} & \textbf{Min} & \textbf{Median} & \textbf{Max} \\
+        \textbf{Feature}     & \textbf{Type} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Min} & \textbf{Median} & \textbf{Max} \\
         \hline
-        Age                 & 49.30         & 18.19            & 18.00        & 49.00           & 80.00        \\
-        Blood Pressure      & 149.76        & 17.57            & 120.00       & 150.00          & 180.00       \\
-        Cholesterol Level   & 225.43        & 43.58            & 150.00       & 226.00          & 300.00       \\
-        BMI                 & 29.08         & 6.31             & 18.00        & 29.08           & 40.00        \\
-        Sleep Hours         & 6.99          & 1.75             & 4.00         & 7.00            & 10.00        \\
-        Triglyceride Level  & 250.73        & 87.07            & 100.00       & 250.00          & 400.00       \\
-        Fasting Blood Sugar & 120.14        & 23.58            & 80.00        & 120.00          & 160.00       \\
-        CRP Level           & 7.47          & 4.34             & 0.00         & 7.47            & 15.00        \\
-        Homocysteine Level  & 12.46         & 4.32             & 5.00         & 12.41           & 20.00        \\
+        Gender               & Categorical   &               &                  &              &                 &              \\
+        Exercise Habits      & Categorical   &               &                  &              &                 &              \\
+        Smoking              & Categorical   &               &                  &              &                 &              \\
+        Family Heart Disease & Categorical   &               &                  &              &                 &              \\
+        Diabetes             & Categorical   &               &                  &              &                 &              \\
+        High Blood Pressure  & Categorical   &               &                  &              &                 &              \\
+        Low HDL Cholesterol  & Categorical   &               &                  &              &                 &              \\
+        High LDL Cholesterol & Categorical   &               &                  &              &                 &              \\
+        Stress Level         & Categorical   &               &                  &              &                 &              \\
+        Sugar Consumption    & Categorical   &               &                  &              &                 &              \\
+        Age                  & Numerical     & 49.30         & 18.19            & 18.00        & 49.00           & 80.00        \\
+        Blood Pressure       & Numerical     & 149.76        & 17.57            & 120.00       & 150.00          & 180.00       \\
+        Cholesterol Level    & Numerical     & 225.43        & 43.58            & 150.00       & 226.00          & 300.00       \\
+        BMI                  & Numerical     & 29.08         & 6.31             & 18.00        & 29.08           & 40.00        \\
+        Sleep Hours          & Numerical     & 6.99          & 1.75             & 4.00         & 7.00            & 10.00        \\
+        Triglyceride Level   & Numerical     & 250.73        & 87.07            & 100.00       & 250.00          & 400.00       \\
+        Fasting Blood Sugar  & Numerical     & 120.14        & 23.58            & 80.00        & 120.00          & 160.00       \\
+        CRP Level            & Numerical     & 7.47          & 4.34             & 0.00         & 7.47            & 15.00        \\
+        Homocysteine Level   & Numerical     & 12.46         & 4.32             & 5.00         & 12.41           & 20.00        \\
         \hline
     \end{tabular}
 \end{table}
 
 
 \section{Problems and Challenges}
-Throughout the development of our heart failure risk prediction system, we encountered various technical and methodological challenges that required careful consideration and innovative solutions.
+% Throughout the development of our heart failure risk prediction system,
+% we encountered various technical and methodological challenges
+% that required careful consideration and innovative solutions.
+
 
 \subsection{Data Quality and Preprocessing Challenges}
 
@@ -280,6 +267,30 @@ Throughout the development of our heart failure risk prediction system, we encou
     \end{tabular}
 \end{tcolorbox}
 
+% NOTE:combined with the table above
+% \begin{table}[H]
+%     \centering
+%     \caption{Summary Statistics for Key Numerical Features}
+%     \small
+%     \begin{tabular}{|l|r|r|r|r|r|}
+%         \hline
+%         \textbf{Feature}    & \textbf{Mean} & \textbf{Std Dev} & \textbf{Min} & \textbf{Median} & \textbf{Max} \\
+%         \hline
+%         Age                 & 49.30         & 18.19            & 18.00        & 49.00           & 80.00        \\
+%         Blood Pressure      & 149.76        & 17.57            & 120.00       & 150.00          & 180.00       \\
+%         Cholesterol Level   & 225.43        & 43.58            & 150.00       & 226.00          & 300.00       \\
+%         BMI                 & 29.08         & 6.31             & 18.00        & 29.08           & 40.00        \\
+%         Sleep Hours         & 6.99          & 1.75             & 4.00         & 7.00            & 10.00        \\
+%         Triglyceride Level  & 250.73        & 87.07            & 100.00       & 250.00          & 400.00       \\
+%         Fasting Blood Sugar & 120.14        & 23.58            & 80.00        & 120.00          & 160.00       \\
+%         CRP Level           & 7.47          & 4.34             & 0.00         & 7.47            & 15.00        \\
+%         Homocysteine Level  & 12.46         & 4.32             & 5.00         & 12.41           & 20.00        \\
+%         \hline
+%     \end{tabular}
+% \end{table}
+
+
+
 \subsubsection{Missing Values}
 \vspace{-0.25cm}
 
@@ -289,13 +300,15 @@ Throughout the development of our heart failure risk prediction system, we encou
     \caption{Missing Values Matrix Visualization}
 \end{figure}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{./pictures/missing_values_heatmap.png}
-    \caption{Missing Values Heatmap Visualization}
-\end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.8\textwidth]{./pictures/missing_values_heatmap.png}
+%     \caption{Missing Values Heatmap Visualization}
+% \end{figure}
 
-The visualizations above helped us identify patterns in missing data. The matrix shows which data points are missing across all features, while the heatmap reveals correlations in missingness between variables. The 'Alcohol Consumption' feature clearly shows the highest rate of missing values.
+The visualization above helped us identify patterns in
+missing data. The matrix shows which data points are missing
+across all features.
 
 \begin{figure}[H]
     \centering
@@ -303,7 +316,9 @@ The visualizations above helped us identify patterns in missing data. The matrix
     \caption{Boxplot Analysis for Outlier Detection}
 \end{figure}
 
-Our outlier analysis using boxplots showed no significant outliers in the numerical features that would require special treatment. This allowed us to proceed with the preprocessing without additional outlier handling steps.
+Our outlier analysis using boxplots showed no significant outliers in
+the numerical features that would require special treatment.
+This allowed us to proceed with the preprocessing without additional outlier handling steps.
 
 Our preprocessing approach for missing values involved these steps:
 

@@ -33,7 +33,7 @@ sns.boxplot(data=df.select_dtypes(include=[np.number]))
 plt.title("Boxplot of Numerical Features to Detect Outliers")
 plt.xticks(rotation=45)
 plt.tight_layout()
-plt.savefig("../../paper/pictures/outliers_boxplot.png")
+plt.savefig("../../paper/pictures/outliers.png")
 plt.close(fig)
 
 #  Plot distributions for numerical features
