@@ -154,17 +154,16 @@
 % \vspace*{-0.2in}
 
 \begin{tabular}{ll}
-    \textbf{Team Name:}         & Heart Protectors    \\
-    \textbf{Team Leader:}       & Thien Van Ky Nguyen \\
-    \textbf{Team Members:}      & Marcos Villanueva Abreu, ?, ?, ?          \\
-    \textbf{Meeting Date/Time:} & April 23, 2025      \\
+    \textbf{Team Name:}         & Heart Protectors                                   \\
+    \textbf{Team Leader:}       & Van Ky Thien Nguyen                                \\
+    \textbf{Team Members:}      & Marcos Villanueva Abreu, Kaitlyn Chan, Austin Choi \\
+    \textbf{Meeting Date/Time:} & April 23, 2025                                     \\
     \textbf{Attendees:}         & All team members
 \end{tabular}
 
 \section{Project Topic / Service Scenario}
 
-\textbf{Abstract:} Our project implements advanced machine learning techniques to predict heart failure
-risk based on comprehensive health data.
+\textbf{Abstract:} Our project uses machine learning to predict heart failure risk from patient health data.
 Cardiovascular disease remains one of the leading causes of mortality worldwide,
 with heart failure affecting millions of patients and placing significant
 burden on healthcare systems.
@@ -172,12 +171,12 @@ Traditional diagnostic approaches often fail to identify
 at-risk individuals until symptoms become severe,
 resulting in delayed intervention and poorer outcomes.
 
-We propose a predictive analytics framework that identifies high-risk
-individuals through analysis of clinical and demographic data.
-This system employs supervised learning algorithms to generate risk
-assessments that could enable clinicians to implement early preventive measures.
-By facilitating timely intervention, our approach has the potential to
-reduce heart failure incidence, improve patient outcomes, and optimize healthcare resource allocation.
+We apply classification algorithms to predict whether patients are at risk of heart disease
+based on their health indicators and demographic information.
+Our models provide simple yes/no predictions that could help doctors
+identify high-risk patients who might benefit from preventive care.
+This early detection approach could help reduce heart failure cases,
+improve patient outcomes, and reduce healthcare costs.
 
 % The system uses machine learning to analyze
 % health data and calculate risk scores that
@@ -372,7 +371,7 @@ presented a significant challenge. Through visualizations and statistical analys
     \caption{Smoking vs Heart Disease Status}
 \end{figure}
 
-\textbf{Smoking}: Our visualization reveals a clear relationship between smoking habits and heart disease status.
+\textbf{Smoking}: The visualization above reveals a clear relationship between smoking habits and heart disease status.
 
 Our initial approach included using ANOVA
 F-tests to identify statistically significant features, but the
@@ -453,8 +452,8 @@ failure risk prediction:
         \item Each hidden layer has 512 nodes and used ReLU as their activation function.
         \item Output layer has 2 nodes (binary classification).
         \item Hidden layers use L1 and L2 regularization to reduce overfitting.
-        \item Data is standardized, nominal values are one hot encoded and ordinal values are encoded with an ordinal encoder. 
-        \item Input layer has 26 nodes (7 additional nodes from the 19 features due to the encoding). 
+        \item Data is standardized, nominal values are one hot encoded and ordinal values are encoded with an ordinal encoder.
+        \item Input layer has 26 nodes (7 additional nodes from the 19 features due to the encoding).
     \end{itemize}
 
     \textbf{Evaluation Results:}
