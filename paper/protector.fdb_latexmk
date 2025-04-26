@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1745703548.41744 "d:/protected-repos/heart-protectors/paper/protector.tex" "protector.pdf" "protector" 1745703550.11175 0
+["pdflatex"] 1745704036.1022 "d:/protected-repos/heart-protectors/paper/protector.tex" "protector.pdf" "protector" 1745704037.76263 0
   "c:/texlive/2024/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1724760509.25355 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "c:/texlive/2024/texmf-dist/fonts/map/fontname/texfonts.map" 1724762648.07216 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "c:/texlive/2024/texmf-dist/fonts/tfm/adobe/symbol/psyr.tfm" 1724768836.01065 1408 5937f58aa508ea2cea4901c07d10f5fe ""
@@ -224,14 +224,14 @@
   "c:/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1724770895 5543950 da0a88acaf040aa29dba0fa9202bffcc ""
   "c:/texlive/2024/texmf-var/web2c/pdftex/pdflatex.fmt" 1724770995 8239321 d55f29ef7282e3e02cb469ea67fc4499 ""
   "c:/texlive/2024/texmf.cnf" 1724770879.76683 713 baa45e065482d44c4cd81b98ef72c63b ""
-  "d:/protected-repos/heart-protectors/paper/protector.tex" 1745703547.75108 22781 78cccf397d47d8d0b9473c12f2785eae ""
+  "d:/protected-repos/heart-protectors/paper/protector.tex" 1745704035.38022 23267 66f4eec42f31ba75c54c4ec96124838d ""
   "pictures/blood_pressure_categories_vs_heart_disease_status.png" 1745701904.30957 23244 074eaee0b9640d87e4bf33ff7c8db187 ""
   "pictures/cover.png" 1745478864.76408 21498 4fb03bada4ef1d48e5f23dddaa59d67c ""
   "pictures/missing_values_matrix.png" 1745702115.87283 84511 4d54e8d56db1d7d1bfd5da67f1618167 ""
   "pictures/outliers.png" 1745702116.54889 24109 a602165065e262e4566de04d111b136d ""
   "pictures/smoking_vs_heart_disease_status.png" 1745701905.46029 22020 7e27aad39706d4c2f8a882f0051f2157 ""
-  "protector.aux" 1745703549.92886 3574 007811a2f763914c59bca84116d3fff7 "pdflatex"
-  "protector.out" 1745703549.92886 3909 8c83e32f32fa8b9165d6c01608f3e80b "pdflatex"
+  "protector.aux" 1745704037.58169 3441 5ae9339430dfad9a3462f30b421b0c20 "pdflatex"
+  "protector.out" 1745704037.58269 3758 92192f5235dd5c4d5215f388f1887f41 "pdflatex"
   (generated)
   "protector.aux"
   "protector.log"

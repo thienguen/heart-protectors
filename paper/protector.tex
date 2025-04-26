@@ -171,9 +171,10 @@ Traditional diagnostic approaches often fail to identify
 at-risk individuals until symptoms become severe,
 resulting in delayed intervention and poorer outcomes.
 
-We apply classification algorithms to predict whether patients are at risk of heart disease
+We apply machine learning algorithms and techniques to predict whether
+patients are at risk of heart disease
 based on their health indicators and demographic information.
-Our models provide simple yes/no predictions that could help doctors
+Our models provide simple status predictions that could help doctors
 identify high-risk patients who might benefit from preventive care.
 This early detection approach could help reduce heart failure cases,
 improve patient outcomes, and reduce healthcare costs.
@@ -305,9 +306,7 @@ improve patient outcomes, and reduce healthcare costs.
 %     \caption{Missing Values Heatmap Visualization}
 % \end{figure}
 
-The visualization above helped us identify patterns in
-missing data. The matrix shows which data points are missing
-across all features.
+We able to identify missing data patterns through the matrix above.
 
 \begin{figure}[H]
     \centering
@@ -315,11 +314,12 @@ across all features.
     \caption{Boxplot Analysis for Outlier Detection}
 \end{figure}
 
-Our outlier analysis using boxplots showed no significant outliers in
+Next, we performed outlier analysis using boxplots.
+The analysis showed no significant outliers in
 the numerical features that would require special treatment.
 This allowed us to proceed with the preprocessing without additional outlier handling steps.
 
-Our preprocessing approach for missing values involved these steps:
+To summarize, our preprocessing approach for missing values involved these steps:
 
 \vspace{-0.25cm}
 \begin{itemize}
@@ -398,17 +398,20 @@ Selecting the most appropriate machine learning models for heart failure predict
     \item \textbf{Neural Network (NN)} - During development, our neural network model encountered a very common issue, overfitting. The initial implementation would have 94\% accuracy on average with the training data, and 70\% accuracy on average with the testing data. To battle this overfitting issue, a dropout layer and regularization was implemented.
 \end{itemize}
 
-\subsubsection{Data Integration}
-\vspace{-0.25cm}
-Working with multiple datasets from different sources
-introduced integration challenges.
-Variations in feature naming conventions, units of measurement,
-and data collection methodologies across datasets required
-careful harmonization to create a unified and consistent training dataset.
+% \subsubsection{Data Integration}
+% \vspace{-0.25cm}
+% Our project utilized a single comprehensive dataset (Heart Disease UCI),
+% eliminating integration challenges that would exist with multiple data sources.
+% This approach allowed us to focus on model development rather than data harmonization tasks,
+% ensuring consistency in feature definitions and measurement units throughout the analysis.
 
 \subsubsection{Cross-Validation Strategy}
 \vspace{-0.25cm}
-???
+To ensure robust model evaluation and prevent overfitting,
+we implemented \textbf{k-fold cross-validation} with \textbf{k} values ranging from 5 to 20.
+This standardized approach was consistently applied across all models to facilitate
+fair comparison of performance metrics.
+% The cross-validation process helped us validate our models' generalizability by testing them on multiple different training and validation splits of the data.
 
 % TODO: add the implementation of the models here
 \section{Models Implemented}
