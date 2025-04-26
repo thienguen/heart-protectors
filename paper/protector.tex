@@ -23,6 +23,7 @@
 \usepackage{titlesec}
 \usepackage{hyperref}
 \usepackage{listings}
+\usepackage{siunitx}
 \usepackage{float}
 \usepackage{pifont} % Required for checkmark
 \usepackage[export]{adjustbox}  % gives \includegraphics the roundcorner key
@@ -507,10 +508,11 @@ failure risk prediction:
     \end{itemize}
 \end{tcolorbox}
 
-\subsection{Member 3 (Name, graduate/undergraduate)}
-
-\begin{tcolorbox}[
-        title=Data Preprocessing and Feature Engineering,
+%-------------------------------------------------
+\subsection{Member 3 (Kaitlyn Chan, undergraduate)}
+%-------------------------------------------------
+\begin{tcolorbox}[%
+        title=K-Nearest Neighbors Classification,
         colback=lightgreen!30,
         colframe=darkgreen,
         boxrule=0.5pt,
@@ -518,25 +520,24 @@ failure risk prediction:
         fontupper=\footnotesize
     ]
     \textbf{Implementation details:}
-
-    This work focused on:
     \begin{itemize}[leftmargin=*, itemsep=2pt, parsep=0pt]
-        \item a
-        \item a
-        \item a
-        \item a
-        \item a
+        \item Encoded binary categorical variables (\textit{Yes/No}, \textit{Female/Male}) to  \numrange{0}{1}
+        \item Mapped ordinal features (\textit{Low/Medium/High}) to integer scores \numrange{0}{2}
+        \item Standardized all predictors with \texttt{StandardScaler}
+        \item Tuned $k$ from 1\,–\,10 on a 20 \% hold-out set; selected $k\!=\!5$ for reporting
+        \item Assessed model stability via stratified $k$-fold CV ($k\!=\!5\text{–}20$)
     \end{itemize}
 
-    \textbf{Evaluation Results:}
+    \textbf{Evaluation Results (hold-out, $k=5$):}
     \begin{itemize}[leftmargin=*, itemsep=2pt, parsep=0pt]
-        \item Accuracy:
-        \item Precision:
-        \item Recall:
-        \item F1 Score:
-        \item AUC-ROC:
+        \item Accuracy: \textbf{77.0 \%}
+        \item Precision: \textbf{24.8 \%}
+        \item Recall: \textbf{7.2 \%}
+        \item F1 Score: \textbf{11.2 \%}
+        \item AUC-ROC: \textbf{51.3 \%}
     \end{itemize}
 \end{tcolorbox}
+
 
 \subsection{Member 4 (Name, graduate/undergraduate)}
 
@@ -571,21 +572,23 @@ failure risk prediction:
 
 \section{Discussion}
 \begin{itemize}
-    \item \textbf{Neural Network (NN)} - As we can observe above from the evaluation
+    \item \textbf{Neural Network (NN)} – As we can observe above from the evaluation
           results of the model, the accuracy, recall,
           and precision are the same values while the AUC is very similar
           (the last couple of decimal points are different) to the values
           of the aforementioned metrics. This
-          could be that the model is prediction the samples correctly meaning
-          there are no False Positives or False Negatives, this
-          is really rare so it would be something our team would further need to investigate in order to improve this models performance. Another thing that caught our attention is that it was very common for the neural network to have the same training and testing accuracy average while validating the model using K-fold. The actual values for training and testing data accuracy were different in each fold but the overall accuracy tended to be the same for both.
+          could be that the model is predicting the samples correctly, meaning
+          there are no false positives or false negatives. This
+          scenario is rare, so our team will need to investigate further to improve performance.
+          Another observation is that training and testing accuracies often match when validating with \(k\)-fold;
+          individual folds differ, but the overall averages tend to coincide.
     \item \textbf{Decision Tree Classifier} – While cross-validated accuracy is respectable
           $\,\approx$\,\textbf{66--73\%},
           the model’s precision and recall remain low ($\approx$\,\textbf{7--26\%}), and its AUC stays just above random chance
           ($\approx$\,\textbf{50--52\%}). These figures indicate the tree still struggles to isolate positive cases despite oversampling and tuning. Future work should investigate richer feature engineering, ensemble variants (e.g., balanced random forests, gradient boosting), or cost-sensitive learning to lift minority-class detection without sacrificing overall stability.
-
-
+    \item \textbf{K-Nearest Neighbors (KNN)} – Although overall accuracy is high ($\approx 77\%$), the model captures very few positive cases (recall $\approx 7\%$) and its AUC hovers near random chance ($\approx 51\%$). This suggests a strong bias toward the majority class. Distance-weighted voting, alternative distance metrics, or combining KNN with resampling/ensemble strategies could help boost minority-class detection.
 \end{itemize}
+
 
 
 \end{document}
