@@ -1,5 +1,6 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split, cross_val_score, StratifiedKFold
+import numpy as np
+from sklearn.model_selection import train_test_split, cross_val_score, KFold
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
@@ -73,28 +74,68 @@ def svmPipeline(numericalFeatures, categoricalFeatures):
     model = Pipeline(
         steps=[
             ("preprocessor", preprocessor),
-            ("classifier", SVC(kernel="rbf", class_weight="balanced", probability=True, random_state=42)),
-        ]
+            ("classifier",
+             SVC(
+                kernel="rbf",
+                # class_weight="balanced",
+                probability=True,
+                random_state=42
+            )
+        ),]
     )
 
     return model
 
-def log(message: str):
+def findCorrelatedPairs(data: pd.DataFrame, features: list, threshold: float = 0.8):
     """
-        Logs a message to the console.
+        Finds and prints pairs of features with high correlation which can affect the results of SVM.
 
         Args:
-            message (str): The message to log
+            data (pd.DataFrame): The dataframe containing the features.
+            features (list): List of feature names to check.
+            threshold (float): Correlation threshold above which to flag pairs.
     """
-    print(f"[LOG] {message}")
 
-if __name__ == "__main__":
+    corr_matrix = data[features].corr().abs()
+    # Only look at upper triangle (to avoid duplicate pairs)
+    upper = corr_matrix.where(np.triu(np.ones(corr_matrix.shape), k=1).astype(bool))
+    print(f"\nHighly correlated feature pairs (|corr| > {threshold}):")
+    to_drop = set()
+    for col in upper.columns:
+        for row in upper.index:
+            corr_value = upper.loc[row, col]
+            if pd.notnull(corr_value) and corr_value > threshold:
+                print(f"  {row} <--> {col}: {corr_value:.2f}")
+                # Suggest dropping one (arbitrarily, the second)
+                to_drop.add(col)
+    if to_drop:
+        print("\nSuggested features to consider dropping (one from each pair):")
+        print(sorted(to_drop))
+    else:
+        print("  No highly correlated pairs found.")
+
+def main() -> int:
+    """
+        The entry point of the program
+
+        Args:
+            None
+
+        Returns
+            None
+    """
+
     # Get data into dataframe
     heartData = pd.read_csv("../../process/cleaned_heart_disease.csv")
 
     binaryColumns = [
-        'Gender', 'Smoking', 'Family Heart Disease', 'Diabetes',
-        'High Blood Pressure', 'Low HDL Cholesterol', 'High LDL Cholesterol',
+        'Gender',
+        'Smoking',
+        'Family Heart Disease',
+        'Diabetes',
+        'High Blood Pressure',
+        'Low HDL Cholesterol',
+        'High LDL Cholesterol',
         'Heart Disease Status'
     ]
     multiValueColumns = ['Exercise Habits', 'Stress Level', 'Sugar Consumption']
@@ -104,15 +145,31 @@ if __name__ == "__main__":
     X, y = splitFeaturesAndTarget(convertedData , "Heart Disease Status")
 
     categoricalFeatures = [
-        "Gender", "Exercise Habits", "Smoking", "Family Heart Disease",
-        "Diabetes", "High Blood Pressure", "Low HDL Cholesterol",
-        "High LDL Cholesterol", "Stress Level"
+        "Gender",
+        "Exercise Habits",
+        "Smoking",
+        "Family Heart Disease",
+        "Diabetes",
+        "High Blood Pressure",
+        "Low HDL Cholesterol",
+        "High LDL Cholesterol",
+        "Stress Level"
     ]
     numericalFeatures = [
-        "Age", "Blood Pressure", "Cholesterol Level", "BMI", "Sleep Hours",
-        "Sugar Consumption", "Triglyceride Level", "Fasting Blood Sugar",
-        "CRP Level", "Homocysteine Level"
+        "Age",
+        "Blood Pressure",
+        "Cholesterol Level",
+        "BMI",
+        "Sleep Hours",
+        "Sugar Consumption",
+        "Triglyceride Level",
+        "Fasting Blood Sugar",
+        "CRP Level",
+        "Homocysteine Level"
     ]
+    allFeatures = numericalFeatures + categoricalFeatures
+
+    findCorrelatedPairs(convertedData, allFeatures)
 
     # Split the data into training and testing sets (80% train, 20% test)
     xTrain, xTest, yTrain, yTest = train_test_split(
@@ -138,12 +195,16 @@ if __name__ == "__main__":
     kFoldScored = []
 
     for k in range(5, 21):
-        cv = StratifiedKFold(n_splits=k, shuffle=True, random_state=42)
+        cv = KFold(n_splits=k, shuffle=True, random_state=42)
         scores = cross_val_score(model, X, y, cv=cv, scoring='accuracy', n_jobs=-1)
         kFoldScored.append((k, scores))
-        # print(f"  {k}-fold: Mean Accuracy = {scores.mean():.4f} | Std = {scores.std():.4f}")
 
     print("\nK-Fold cross-validation results:")
     for k, scores in kFoldScored:
         print(f"{k}-fold: Mean Accuracy = {scores.mean():.4f}, Std = {scores.std():.4f}")
+
+    return 0
+
+if __name__ == "__main__":
+    main()
 
