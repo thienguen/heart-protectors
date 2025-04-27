@@ -1,11 +1,11 @@
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split, cross_val_score, KFold
+from sklearn.model_selection import train_test_split, cross_val_score, StratifiedKFold
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.svm import SVC
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, roc_auc_score
 
 def convertCategoricalToNumerical(data: pd.DataFrame, binaryColumns: list, multiValueColumns: list) -> pd.DataFrame:
     """
@@ -77,7 +77,7 @@ def svmPipeline(numericalFeatures, categoricalFeatures):
             ("classifier",
              SVC(
                 kernel="rbf",
-                # class_weight="balanced",
+                class_weight="balanced",
                 probability=True,
                 random_state=42
             )
@@ -180,22 +180,29 @@ def main() -> int:
 
     model.fit(xTrain, yTrain)
 
+    # Get probability predictions for AUC-ROC calculation
+    yPredProbability = model.predict_proba(xTest)[:, 1]
+
     # Predict the test set
     yPred = model.predict(xTest)
     accuracy = accuracy_score(yTest, yPred)
     confusionMatrix = confusion_matrix(yTest, yPred)
     classificationReport = classification_report(yTest, yPred)
+    
+    # Calculate AUC-ROC
+    auc_roc = roc_auc_score(yTest, yPredProbability)
 
-    print(f"\nModel Accuracy: {accuracy:.2f}")
+    print(f"\nModel Accuracy: {accuracy:.2%}")
     print("\nConfusion Matrix:")
     print(confusionMatrix)
     print("\nClassification Report:")
     print(classificationReport)
+    print(f"\nAUC-ROC Score: {auc_roc:.2%}")
 
     kFoldScored = []
 
     for k in range(5, 21):
-        cv = KFold(n_splits=k, shuffle=True, random_state=42)
+        cv = StratifiedKFold(n_splits=k, shuffle=True, random_state=42)
         scores = cross_val_score(model, X, y, cv=cv, scoring='accuracy', n_jobs=-1)
         kFoldScored.append((k, scores))
 

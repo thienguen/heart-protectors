@@ -157,7 +157,7 @@
 \begin{tabular}{ll}
     \textbf{Team Name:}         & Heart Protectors                                   \\
     \textbf{Team Leader:}       & Van Ky Thien Nguyen                                \\
-    \textbf{Team Members:}      & Marcos Villanueva Abreu, Kaitlyn Chan, Austin Choi \\
+    \textbf{Team Members:}      & Marcos Villanueva Abreu, Kaitlin Chan, Austin Choi \\
     \textbf{Meeting Date/Time:} & April 23, 2025                                     \\
     \textbf{Attendees:}         & All team members
 \end{tabular}
@@ -397,6 +397,7 @@ Selecting the most appropriate machine learning models for heart failure predict
 \subsection{Implementation Challenges}
 \begin{itemize}
     \item \textbf{Neural Network (NN)} - During development, our neural network model encountered a very common issue, overfitting. The initial implementation would have 94\% accuracy on average with the training data, and 70\% accuracy on average with the testing data. To battle this overfitting issue, a dropout layer and regularization was implemented.
+    \item \textbf{Support Vector Machine (SVM)} - Implementing this model came with its difficulties due to the nature of the dataset used. The dataset is heavily biased towards no disease which caused performance to initially seem high (80\%) although this was not acutally the case. Cross validation did reveal that this was an issue and to resolve it,  balanced class weight was used to help with the bias.
 \end{itemize}
 
 % \subsubsection{Data Integration}
@@ -422,6 +423,7 @@ failure risk prediction:
     \vspace{-0.25cm}
     \item \textbf{Neural Network (NN)}: A feed-forward multilayer perceptron trained on the UCI dataset with early stopping and dropout regularization.
     \item \textbf{Decision Tree Classifier}: A decision tree classifier wrapped in an \texttt{imblearn} pipeline
+    \item \textbf{Support Vector Machine (SVM)}: A kernel-based classifier using radial basis function (RBF) kernel with balanced class weights to address the dataset imbalance. The model attempts to find an optimal hyperplane that maximizes the margin between heart disease and non-heart disease cases in a transformed feature space.
 \end{itemize}
 
 
@@ -539,7 +541,7 @@ failure risk prediction:
 \end{tcolorbox}
 
 
-\subsection{Member 4 (Name, graduate/undergraduate)}
+\subsection{Member 4 (Austin Choi, undergraduate)}
 
 \begin{tcolorbox}[
         title=Visualization and Model Evaluation,
@@ -553,20 +555,22 @@ failure risk prediction:
 
     This work focused on:
     \begin{itemize}[leftmargin=*, itemsep=2pt, parsep=0pt]
-        \item a
-        \item a
-        \item a
-        \item a
-        \item a
+    Implementation details
+        \item Encoded binary categorical variables (\textit{Yes/No}, \textit{Female/Male}) to  \numrange{0}{1}
+        \item Mapped ordinal features (\textit{Low/Medium/High}) to integer scores \numrange{0}{2}
+        \item Standardized all predictors with \texttt{StandardScaler}
+        \item Set class weight to balanced to account for imbalanced data
+        \item Applied RBF kernel trick to help improve accuracy
+        \item Assessed model stability via stratified $k$-fold CV ($k\!=\!5\text{–}20$)
     \end{itemize}
 
     \textbf{Evaluation Results:}
     \begin{itemize}[leftmargin=*, itemsep=2pt, parsep=0pt]
-        \item Accuracy:
-        \item Precision:
-        \item Recall:
-        \item F1 Score:
-        \item AUC-ROC:
+        \item Accuracy:55.25%
+        \item Precision: 68%
+        \item Recall: 55%
+        \item F1 Score: 60%
+        \item AUC-ROC: 48.70
     \end{itemize}
 \end{tcolorbox}
 
@@ -587,6 +591,7 @@ failure risk prediction:
           the model’s precision and recall remain low ($\approx$\,\textbf{7--26\%}), and its AUC stays just above random chance
           ($\approx$\,\textbf{50--52\%}). These figures indicate the tree still struggles to isolate positive cases despite oversampling and tuning. Future work should investigate richer feature engineering, ensemble variants (e.g., balanced random forests, gradient boosting), or cost-sensitive learning to lift minority-class detection without sacrificing overall stability.
     \item \textbf{K-Nearest Neighbors (KNN)} – Although overall accuracy is high ($\approx 77\%$), the model captures very few positive cases (recall $\approx 7\%$) and its AUC hovers near random chance ($\approx 51\%$). This suggests a strong bias toward the majority class. Distance-weighted voting, alternative distance metrics, or combining KNN with resampling/ensemble strategies could help boost minority-class detection.
+    \item \textbf{Support Vector Machine (SVM)} – We can see that performance for SVM is lower than those of the other models even after various precprocessing techniques and kernel trick were applied. The model's accuracy ($\approx 55\%$) is only slightly better than random guessing wile its AUC is right below random ($\approx 48\%$). This perfomance can be seen across all K-fold validations ($\approx 54\%$). This performance is due toe the class imbalance since the dataset heavily leans towards no heart disease. This can be seen when class weight is not set to balanced since the model will predict 0 every time.
 \end{itemize}
 
 
